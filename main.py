@@ -9,28 +9,22 @@ ctk.set_appearance_mode('dark')
 
 
 class HeaderFrame(ctk.CTkFrame):
-    def __init__(self, master: ctk.CTk, current_path: str):
+    def __init__(self, master: ctk.CTk, logo: Image.ImageFile.ImageFile):
         super().__init__(master)
 
-        tmp_img = Image.open(path.join(current_path, "assets", const.HEADER['img_path']))
-
-        head_logo = ctk.CTkLabel(
+        self.head_logo = ctk.CTkLabel(
             self,
-            image=ctk.CTkImage(
-                light_image=tmp_img,
-                dark_image=tmp_img,
-                size=const.HEADER['img_size']
-            ),
+            image=ctk.CTkImage(light_image=logo, dark_image=logo, size=const.HEADER['img_size']),
             text="" # Stay empty.
         )
-        head_logo.grid(column=0, row=0)
+        self.head_logo.grid(column=0, row=0)
 
-        head_label = ctk.CTkLabel(
+        self.head_label = ctk.CTkLabel(
             self,
             text=const.HEADER['text'],
             font=(const.FONTS['family'], const.FONTS['size'], const.FONTS['weight'], const.FONTS['slant'])
         )
-        head_label.grid(column=0, row=1, pady=const.HEADER['text_pady'])
+        self.head_label.grid(column=0, row=1, pady=const.HEADER['text_pady'])
 
         self.grid(column=0, row=0, pady=const.HEADER['pady'])
 
@@ -50,7 +44,10 @@ class App(ctk.CTk):
 
         self.grid_columnconfigure(0, weight=1)
 
-        self.head_frame = HeaderFrame(master=self, current_path=self.current_path)
+        self.head_frame = HeaderFrame(
+            self,
+            Image.open(path.join(self.current_path, "assets", const.HEADER['img_path']))
+        )
 
         self.update() # Just to get the correct values from winfo_width() and winfo_height().
 
