@@ -1,25 +1,43 @@
 import sys
-from os import path
-from PIL import Image
+
+from PIL.ImageFile import ImageFile
+from PIL.Image import open as pillow_open_img
+
+from os import chdir as os_chdir
+from os.path import (
+    dirname    as os_path_dirname,
+    abspath    as os_path_abspath,
+    join       as os_path_join,
+    isdir      as os_path_isdir
+)
+
+from tkinter.filedialog import askdirectory as ctk_ask_dir
+from customtkinter import (
+    set_appearance_mode as ctk_set_appearance,
+    CTk,
+    CTkFrame,
+    CTkLabel,
+    CTkEntry,
+    CTkImage
+)
 
 import const
-import customtkinter as ctk
 
-ctk.set_appearance_mode('dark')
+ctk_set_appearance('dark')
 
 
-class HeaderFrame(ctk.CTkFrame):
-    def __init__(self, master: ctk.CTk, logo: Image.ImageFile.ImageFile):
+class HeaderFrame(CTkFrame):
+    def __init__(self, master: CTk, logo: ImageFile):
         super().__init__(master)
 
-        self.head_logo = ctk.CTkLabel(
+        self.head_logo = CTkLabel(
             self,
-            image=ctk.CTkImage(light_image=logo, dark_image=logo, size=const.HEADER['img_size']),
+            image=CTkImage(light_image=logo, dark_image=logo, size=const.HEADER['img_size']),
             text="" # Stay empty.
         )
         self.head_logo.grid(column=0, row=0)
 
-        self.head_label = ctk.CTkLabel(
+        self.head_label = CTkLabel(
             self,
             text=const.HEADER['text'],
             font=(const.FONTS['family'], const.FONTS['size'], const.FONTS['weight'], const.FONTS['slant'])
@@ -29,24 +47,24 @@ class HeaderFrame(ctk.CTkFrame):
         self.grid(column=0, row=0, pady=const.HEADER['pady'])
 
 
-class App(ctk.CTk):
+class App(CTk):
     def __init__(self):
         super().__init__()
         self.bind('<Escape>', lambda e: self.destroy()) # Bind Escape key to close the app.
 
         # Get absolute path, works for dev and for PyInstaller.
-        self.current_path = getattr(sys, '_MEIPASS', path.dirname(path.abspath(__file__)))
+        self.current_path = getattr(sys, '_MEIPASS', os_path_dirname(os_path_abspath(__file__)))
 
         self.title(const.SCREEN_TITLE)
         self.resizable(width=const.SCREEN_RESIZABLE, height=const.SCREEN_RESIZABLE)
-        self.iconbitmap(path.join(self.current_path, "assets", const.SCREEN_ICON))
+        self.iconbitmap(os_path_join(self.current_path, "assets", const.SCREEN_ICON))
         self.geometry(self.get_display_center(const.SCREEN_W, const.SCREEN_H))
 
         self.grid_columnconfigure(0, weight=1)
 
         self.head_frame = HeaderFrame(
             self,
-            Image.open(path.join(self.current_path, "assets", const.HEADER['img_path']))
+            pillow_open_img(os_path_join(self.current_path, "assets", const.HEADER['img_path']))
         )
 
         self.update() # Just to get the correct values from winfo_width() and winfo_height().
