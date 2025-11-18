@@ -1,8 +1,9 @@
-SCREEN_W = 550
-SCREEN_H = 460
+SCREEN_W = 600
+SCREEN_H = 450
 SCREEN_RESIZABLE = False
 SCREEN_TITLE = 'Virtual Environment Creator'
 SCREEN_ICON = 'python.ico'
+APPEARANCE_MODE = 'dark'
 
 FONTS = {
     "family": "Segoe UI",
