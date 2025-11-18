@@ -112,7 +112,7 @@ class MainFrame(CTkFrame):
         self.name_frame.grid(column=0, row=0, pady=(15, 30))
 
         self.dir_frame = DirFrame(self, bold12, bold15)
-        self.dir_frame.grid(column=0, row=1, pady=(0, 30))
+        self.dir_frame.grid(column=0, row=1, pady=(0, 40))
 
         self.btn_send = CTkButton(
             self,
