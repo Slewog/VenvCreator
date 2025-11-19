@@ -1,8 +1,9 @@
-SCREEN_W = 600
-SCREEN_H = 450
-SCREEN_RESIZABLE = False
-SCREEN_TITLE = 'Virtual Environment Creator'
-SCREEN_ICON = 'python.ico'
+APP_W = 600
+APP_H = 450
+APP_RESIZABLE = False
+APP_TITLE = 'Virtual Environment Creator'
+APP_ICON = 'python.ico'
+APP_LOGO = 'python.png'
 APPEARANCE_MODE = 'dark'
 
 FRAME_COLORS = 'transparent'

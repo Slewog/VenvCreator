@@ -28,12 +28,15 @@ from CTkMessagebox import CTkMessagebox
 
 ctk_set_appearance(const.APPEARANCE_MODE)
 
+# Get absolute path, works for dev and for PyInstaller.
+DIR_PATH = getattr(sys, '_MEIPASS', os_path_dirname(os_path_abspath(__file__)))
+
 
 class HeaderFrame(CTkFrame):
-    def __init__(self, master: CTk, current_path: str, font: CTkFont):
+    def __init__(self, master: CTk, font: CTkFont):
         super().__init__(master, fg_color=const.FRAME_COLORS)
 
-        img = pillow_open_img(os_path_join(current_path, "assets", 'python.png'))
+        img = pillow_open_img(os_path_join(DIR_PATH, "assets", const.APP_LOGO))
 
         head_logo = CTkLabel(
             self,
@@ -84,8 +87,6 @@ class MainFrame(CTkFrame):
 
 class App():
     def __init__(self, window: CTk):
-        # Get absolute path, works for dev and for PyInstaller.
-        self.current_path = getattr(sys, '_MEIPASS', os_path_dirname(os_path_abspath(__file__)))
 
         bold12 = CTkFont(family=const.FONT_FAMILY, size=12, weight="bold")
         bold15 = CTkFont(family=const.FONT_FAMILY, size=15, weight="bold")
@@ -93,13 +94,13 @@ class App():
         # Bind Escape key to close the app.
         window.bind('<Escape>', lambda e: window.destroy())
 
-        window.title(const.SCREEN_TITLE)
-        window.resizable(width=const.SCREEN_RESIZABLE, height=const.SCREEN_RESIZABLE)
-        window.iconbitmap(os_path_join(self.current_path, "assets", const.SCREEN_ICON))
-        window.geometry(self.get_display_center(const.SCREEN_W, const.SCREEN_H))
+        window.title(const.APP_TITLE)
+        window.resizable(width=const.APP_RESIZABLE, height=const.APP_RESIZABLE)
+        window.iconbitmap(os_path_join(DIR_PATH, "assets", const.APP_ICON))
+        window.geometry(self.get_display_center(const.APP_W, const.APP_H))
         window.grid_columnconfigure(0, weight=1)
 
-        self.header = HeaderFrame(window, self.current_path, bold15)
+        self.header = HeaderFrame(window, bold15)
         self.header.grid(column=0, row=0, pady=(15, 20))
 
         self.main = MainFrame(window, bold12, bold15)
@@ -113,15 +114,14 @@ class App():
             font=(const.FONT_FAMILY, 12, 'bold', 'roman', 'underline')
         )
         copyright.grid(column=0, row=3, pady=(30, 0))
-    
+
     def show_message(self, message:str, icon:str = 'warning') -> str | None:
-        """Show a message to the user
+        """Show a message to the user.
 
         Args:
             icon = 'warning' | 'question' | 'cancel' | 'check' | 'info'
-            
         """
-        msg = CTkMessagebox(title=const.SCREEN_TITLE, message=message, icon=icon, sound=True)
+        msg = CTkMessagebox(title=const.APP_TITLE, message=message, icon=icon, sound=True, fade_in_duration=85)
         return msg.get()
 
     def set_dir_project(self):
