@@ -9,3 +9,4 @@ APPEARANCE_MODE = 'dark'
 FRAME_COLORS = 'transparent'
 ENTRY_WIDTH = 300
 FONT_FAMILY = 'Segoe UI'
+FONT_WEIGHT = 'bold'

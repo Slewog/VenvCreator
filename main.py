@@ -30,13 +30,14 @@ ctk_set_appearance(const.APPEARANCE_MODE)
 
 # Get absolute path, works for dev and for PyInstaller.
 DIR_PATH = getattr(sys, '_MEIPASS', os_path_dirname(os_path_abspath(__file__)))
+ASSETS_PATH = os_path_join(DIR_PATH, 'assets')
 
 
 class HeaderFrame(CTkFrame):
     def __init__(self, master: CTk, font: CTkFont):
         super().__init__(master, fg_color=const.FRAME_COLORS)
 
-        img = pillow_open_img(os_path_join(DIR_PATH, "assets", const.APP_LOGO))
+        img = pillow_open_img(os_path_join(ASSETS_PATH, const.APP_LOGO))
 
         head_logo = CTkLabel(
             self,
@@ -88,15 +89,15 @@ class MainFrame(CTkFrame):
 class App():
     def __init__(self, window: CTk):
 
-        bold12 = CTkFont(family=const.FONT_FAMILY, size=12, weight="bold")
-        bold15 = CTkFont(family=const.FONT_FAMILY, size=15, weight="bold")
+        bold12 = CTkFont(family=const.FONT_FAMILY, size=12, weight=const.FONT_WEIGHT)
+        bold15 = CTkFont(family=const.FONT_FAMILY, size=15, weight=const.FONT_WEIGHT)
 
         # Bind Escape key to close the app.
         window.bind('<Escape>', lambda e: window.destroy())
 
         window.title(const.APP_TITLE)
         window.resizable(width=const.APP_RESIZABLE, height=const.APP_RESIZABLE)
-        window.iconbitmap(os_path_join(DIR_PATH, "assets", const.APP_ICON))
+        window.iconbitmap(os_path_join(ASSETS_PATH, const.APP_ICON))
         window.geometry(self.get_display_center(const.APP_W, const.APP_H))
         window.grid_columnconfigure(0, weight=1)
 
@@ -111,7 +112,7 @@ class App():
         copyright = CTkLabel(
             window,
             text='Slewog Software @ All Rights Reserved',
-            font=(const.FONT_FAMILY, 12, 'bold', 'roman', 'underline')
+            font=(const.FONT_FAMILY, 12, const.FONT_WEIGHT, 'roman', 'underline')
         )
         copyright.grid(column=0, row=3, pady=(30, 0))
 
