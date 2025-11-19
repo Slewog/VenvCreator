@@ -3,8 +3,6 @@ import const
 
 from PIL.Image import open as pillow_open_img
 
-from ctypes import windll, byref
-from ctypes.wintypes import RECT as ct_Rect
 
 from os import chdir as os_goto_dir
 from os.path import (
@@ -25,6 +23,8 @@ from customtkinter import (
     CTkButton,
     filedialog as ctk_file_dialog
 )
+
+from CTkMessagebox import CTkMessagebox
 
 ctk_set_appearance(const.APPEARANCE_MODE)
 
@@ -77,6 +77,10 @@ class MainFrame(CTkFrame):
         self.create_btn = CTkButton(self, text="Create your Virtual Env", font=bold15)
         self.create_btn.grid(column=0, row=2, pady=(0, 1))
 
+    def set_btn_state(self, new_state: str) -> None:
+        self.browse_btn.configure(state=new_state)
+        self.create_btn.configure(state=new_state)
+
 
 class App():
     def __init__(self, window: CTk):
@@ -100,6 +104,8 @@ class App():
 
         self.main = MainFrame(window, bold12, bold15)
         self.main.grid(column=0, row=1, sticky='ew', padx=10)
+        self.main.browse_btn.configure(command=self.set_dir_project)
+        self.main.create_btn.configure(command=self.check_venv_param)
 
         copyright = CTkLabel(
             window,
@@ -107,6 +113,38 @@ class App():
             font=(const.FONT_FAMILY, 12, 'bold', 'roman', 'underline')
         )
         copyright.grid(column=0, row=3, pady=(30, 0))
+    
+    def show_message(self, message:str, icon:str = 'warning') -> str | None:
+        """Show a message to the user
+
+        Args:
+            icon = 'warning' | 'question' | 'cancel' | 'check' | 'info'
+            
+        """
+        msg = CTkMessagebox(title=const.SCREEN_TITLE, message=message, icon=icon, sound=True)
+        return msg.get()
+
+    def set_dir_project(self):
+        self.main.env_path_entry.configure(state= 'normal')
+        self.main.env_path_entry.delete(0, 'end')
+        self.main.env_path_entry.insert(0, ctk_file_dialog.askdirectory())
+        self.main.env_path_entry.configure(state= 'disabled')
+
+    def check_venv_param(self):
+        self.main.set_btn_state('disabled')
+
+        dir_path = self.main.env_path_entry.get()
+        venv_name = self.main.env_name_entry.get()
+
+        if not os_path_isdir(dir_path):
+            self.show_message(message="Select a valid directory to create your virtuel environment")
+            self.main.set_btn_state('normal')
+            return
+
+        if len(venv_name) == 0 or " " in venv_name or "-" in venv_name:
+            self.show_message(message="Please enter a valid name for your virtuel environment")
+            self.main.set_btn_state('normal')
+            return
 
     def get_display_center(self, app_width: int, app_height: int) -> str:
         """Centers the CTK window to the main display.
@@ -119,6 +157,9 @@ class App():
         Returns:
             App geometry.
         """
+        from ctypes import windll, byref
+        from ctypes.wintypes import RECT as ct_Rect
+        
         work_area = ct_Rect()
         _ = windll.user32.SystemParametersInfoW(0x0030, 0, byref(work_area), 0)
         x = (work_area.right - app_width) // 2
