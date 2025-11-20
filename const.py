@@ -3,10 +3,18 @@ APP_H = 450
 APP_RESIZABLE = False
 APP_TITLE = 'Virtual Environment Creator'
 APP_ICON = 'python.ico'
-APP_LOGO = 'python.png'
-APPEARANCE_MODE = 'dark'
+HEADER_LOGO = 'python.png'
+HEADER_LOGO_SIZE = (150, 150)
 
-FRAME_COLORS = 'transparent'
+APPEARANCE_MODE = 'dark'
+COLOR_TRANSPARENT  = 'transparent'
 ENTRY_WIDTH = 300
+
 FONT_FAMILY = 'Segoe UI'
 FONT_WEIGHT = 'bold'
+
+POP_UP_FADE_DURATION = 85
+POP_UP_W = 350
+POP_UP_H = 150
+POP_UP_BORDER_W = 1
+POP_UP_Y_OFFSET = 20
